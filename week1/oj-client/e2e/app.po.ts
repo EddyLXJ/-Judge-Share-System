@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor';
 
-export class OjClientPage {
+export class OjTryPage {
   navigateTo() {
     return browser.get('/');
   }

@@ -1,10 +1,10 @@
-import { OjClientPage } from './app.po';
+import { OjTryPage } from './app.po';
 
-describe('oj-client App', function() {
-  let page: OjClientPage;
+describe('oj-try App', function() {
+  let page: OjTryPage;
 
   beforeEach(() => {
-    page = new OjClientPage();
+    page = new OjTryPage();
   });
 
   it('should display message saying app works', () => {
