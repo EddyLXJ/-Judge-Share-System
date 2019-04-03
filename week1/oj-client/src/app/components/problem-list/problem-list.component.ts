@@ -13,10 +13,10 @@ export class ProblemListComponent implements OnInit {
   constructor(@Inject('data') private data) { }
 
   ngOnInit() {
-    this.getProblems();
+    this.getProblem();
   }
 
-  getProblems(): void {
+  getProblem(): void {
     this.problems = this.data.getProblems();
   }
 }

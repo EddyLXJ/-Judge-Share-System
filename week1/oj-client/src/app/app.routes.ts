@@ -1,4 +1,4 @@
-import {Router, RouterModule, Routes} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {ProblemListComponent} from './components/problem-list/problem-list.component';
 import {ProblemDetialComponent} from './components/problem-detial/problem-detial.component';
 
