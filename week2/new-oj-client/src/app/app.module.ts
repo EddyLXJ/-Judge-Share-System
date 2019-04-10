@@ -9,6 +9,7 @@ import {DataService} from './services/data.service';
 import { NewProblemComponent } from './components/new-problem/new-problem.component';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    routing
+    routing,
+    HttpClientModule
   ],
   providers: [{
     provide: 'data',

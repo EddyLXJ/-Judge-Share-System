@@ -1,28 +1,3 @@
-// var problems = [{
-//  id: 1,
-//  name: 'haha',
-//  desc: 'Given an arrasdf asdfsvdasvhajbsfjhbjbjhasbdjf ajshbf hjasbfhjasbdfjhb asdhjbf jahsb lsab jhab ',
-//  difficulty: 'easy'
-// },
-//  {
-//    id: 2,
-//    name: 'hahaa',
-//    desc: 'Givena an arrasdf asdfsvdasvhajbsfjhbjbjhasbdjf ajshbf hjasbfhjasbdfjhb asdhjbf jahsb lsab jhab ',
-//    difficulty: 'medium'
-//  },
-//  {
-//    id: 3,
-//    name: 'hahasdfaa',
-//    desc: 'Giasdfvena an arrasdf asdfsvdasvhajbsfjhbjbjhasbdjf ajshbf hjasbfhjasbdfjhb asdhjbf jahsb lsab jhab ',
-//    difficulty: 'hard'
-//  },
-//  {
-//    id: 4,
-//    name: 'taajj',
-//    desc: 'asdfasdfsggas',
-//    difficulty: 'super'
-//  }
-// ];
 
 var ProblemModel = require("../models/problemModel");
 
@@ -53,7 +28,7 @@ var getProblem = function (id) {
 var addProblem = function (newProblem) {
   return new Promise((resolve, reject) => {
     ProblemModel.findOne({name: newProblem.name}, function(error, problem) {
-      if (problem.length != 0){
+      if (problem){
         reject("Problem name already exists");
       } else {
         ProblemModel.count({}, function(err, num){

@@ -1,29 +1,31 @@
 import { Injectable } from '@angular/core';
 import {Problem} from '../models/problem.model';
 import {PROBLEMS} from '../mock.problem';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataService {
 
   private problemsSource = new BehaviorSubject<Problem[]>([]);
   problems: Problem[] = PROBLEMS;
   constructor(private http: HttpClient) { }
+
   getProblems(): Observable<Problem[]> {
     this.http.get('api/v1/problems').toPromise()
       .then((res: any) => {
-        this.problemsSource.next(res.json());
+        this.problemsSource.next(res);
       })
       .catch(this.handleError);
     return this.problemsSource.asObservable();
   }
 
   getProblem(id: number): Promise<Problem> {
-    return this.http.get('api/v1/problems/').toPromise()
-      .then((res: any) => res.json())
+    return this.http.get('api/v1/problems/' + id).toPromise()
+      .then((res: any) => res)
       .catch(this.handleError);
   }
 
@@ -33,7 +35,7 @@ export class DataService {
       .toPromise()
       .then((res: any) => {
         this.getProblems();
-        return res.json();
+        return res;
       })
       .catch(this.handleError);
   }

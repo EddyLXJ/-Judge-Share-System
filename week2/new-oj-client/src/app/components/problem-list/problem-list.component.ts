@@ -11,8 +11,8 @@ import {Subscription} from 'rxjs';
 
 export class ProblemListComponent implements OnInit {
 
-  problems: Problem[];
-  subscriptionProblems: Subscription
+  problems: Problem[] = [];
+  subscriptionProblems: Subscription;
   constructor(@Inject('data') private data) { }
 
   ngOnInit() {
