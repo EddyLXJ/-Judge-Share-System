@@ -295,7 +295,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n  <form>\n    <div class=\"form-group\">\n      <label for=\"problemName\">Problem Name</label>\n      <input type=\"text\" class=\"form-control\" id=\"problemName\" name=\"problemName\"\n             required placeholder=\"Enter Problem Name\" [(ngModel)]=\"newProblem.name\">\n    </div>\n    <div class=\"form-group\">\n      <label for=\"problemDesc\">Problem Description</label>\n      <textarea type=\"text\" row=\"3\" class=\"form-control\" id=\"problemDesc\" name=\"problemDesc\"\n                required placeholder=\"Enter Problem Description\" [(ngModel)]=\"newProblem.desc\"></textarea>\n    </div>\n    <div class=\"form-group\">\n      <label for=\"difficulty\">Problem Difficulty</label>\n      <select class=\"form-control\" id=\"difficulty\" name=\"difficulty\"\n                 [(ngModel)]=\"newProblem.difficulty\">\n        <option value=\"\" disabled selected>Select Difficulty</option>\n        <option *ngFor=\"let difficulty of difficulties\" [value]=\"difficulty\">\n          {{difficulty}}\n        </option>\n      </select>\n    </div>\n    <div class=\"row\">\n      <div class=\"col-md-12\">\n        <button type=\"submit\" class=\"btn btn-primary float-right\" (click)=\"addProblem()\">Add Problem</button>\n      </div>\n    </div>\n\n  </form>\n</div>\n"
+module.exports = "<div>\n  <form>\n    <div class=\"form-group\">\n      <label for=\"problemName\">Problem Name</label>\n      <input type=\"text\" class=\"form-control\" id=\"problemName\" name=\"problemName\"\n             required placeholder=\"Enter Problem Name\" [(ngModel)]=\"newProblem.name\">\n    </div>\n    <div class=\"form-group\">\n      <label for=\"problemDesc\">Problem Description</label>\n      <textarea type=\"text\" row=\"3\" class=\"form-control\" id=\"problemDesc\" name=\"problemDesc\"\n                required placeholder=\"Enter Problem Description\" [(ngModel)]=\"newProblem.desc\"></textarea>\n    </div>\n    <div class=\"form-group\">\n      <label for=\"difficulty\">Problem Difficulty</label>\n      <select class=\"form-control\" id=\"difficulty\" name=\"difficulty\"\n                 [(ngModel)]=\"newProblem.difficulty\">\n        <option *ngFor=\"let difficulty of difficulties\" [value]=\"difficulty\">\n          {{difficulty}}\n        </option>\n      </select>\n    </div>\n    <div class=\"row\">\n      <div class=\"col-md-12\">\n        <button type=\"submit\" class=\"btn btn-primary float-right\" (click)=\"addProblem()\">Add Problem</button>\n      </div>\n    </div>\n\n  </form>\n</div>\n"
 
 /***/ }),
 
@@ -317,7 +317,7 @@ var DEFAULT_PROBLEM = Object.freeze({
     id: 0,
     name: '',
     desc: '',
-    difficulty: ''
+    difficulty: 'Easy'
 });
 var NewProblemComponent = /** @class */ (function () {
     function NewProblemComponent(data) {
@@ -430,7 +430,7 @@ module.exports = ".difficulty {\n  min-width: 65px;\n  margin-right: 10px;\n  di
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <!-- hello -->\n  <app-new-problem></app-new-problem>\n  <div class=\"list-group\">\n\n    <a class=\"list-group-item list-group-item-action\" *ngFor=\"let problem of problems\" [routerLink]=\"['/problems',problem.id]\">\n      <span class=\"{{'pull-left label difficulty diff-'+problem.difficulty.toLowerCase()}}\"> {{ problem.difficulty }} </span>\n      <strong class=\"title\">{{ problem.id }}. {{problem.name}}</strong>\n    </a>\n  </div>\n</div>\n"
+module.exports = "<div class=\"container\">\n  <!-- hello -->\n  <app-new-problem></app-new-problem>\n  <div class=\"list-group\">\n\n    <a class=\"list-group-item list-group-item-action\" *ngFor=\"let problem of problems\" [routerLink]=\"['/problems',problem.id]\">\n      <span class=\"{{'pull-left label difficulty diff-' + problem.difficulty.toLowerCase()}}\"> {{ problem.difficulty }} </span>\n      <strong class=\"title\">{{ problem.id }}. {{problem.name}}</strong>\n    </a>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -545,14 +545,14 @@ var DataService = /** @class */ (function () {
         var _this = this;
         this.http.get('api/v1/problems').toPromise()
             .then(function (res) {
-            _this.problemsSource.next(res);
+            _this.problemsSource.next(res.json());
         })
             .catch(this.handleError);
         return this.problemsSource.asObservable();
     };
     DataService.prototype.getProblem = function (id) {
         return this.http.get('api/v1/problems/' + id).toPromise()
-            .then(function (res) { return res; })
+            .then(function (res) { return res.json(); })
             .catch(this.handleError);
     };
     DataService.prototype.addProblem = function (problem) {
@@ -562,7 +562,7 @@ var DataService = /** @class */ (function () {
             .toPromise()
             .then(function (res) {
             _this.getProblems();
-            return res;
+            return res.json();
         })
             .catch(this.handleError);
     };
