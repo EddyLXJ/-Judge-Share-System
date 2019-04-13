@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import {HttpClientModule} from '@angular/common/http';
 import {AuthService} from './services/auth.service';
+import { CallbackComponent } from './components/callback/callback.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {AuthService} from './services/auth.service';
     ProblemListComponent,
     ProblemDetailComponent,
     NewProblemComponent,
-    NavbarComponent
+    NavbarComponent,
+    CallbackComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +36,7 @@ import {AuthService} from './services/auth.service';
     {
     provide: 'auth',
     useClass: AuthService
-  }],
+  }, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
