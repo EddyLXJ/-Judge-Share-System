@@ -19,9 +19,10 @@ export class NavbarComponent implements OnInit {
   }
 
   login(): void {
-    this.auth.login();
-    let profile = this.auth.getProfile();
-    this.username = profile["nickname"];
+    this.auth.login().then(
+      username => this.username = username
+    );
+
   }
 
   // logout(): void {

@@ -340,9 +340,8 @@ var NavbarComponent = /** @class */ (function () {
         }
     };
     NavbarComponent.prototype.login = function () {
-        this.auth.login();
-        var profile = this.auth.getProfile();
-        this.username = profile["nickname"];
+        var _this = this;
+        this.auth.login().then(function (username) { return _this.username = username; });
     };
     NavbarComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -635,7 +634,24 @@ var AuthService = /** @class */ (function () {
         });
     }
     AuthService.prototype.login = function () {
+        var _this = this;
         this.lock.show();
+        return new Promise(function (resolve, reject) {
+            _this.lock.on('authenticated', function (authResult) {
+                if (authResult && authResult.accessToken && authResult.idToken) {
+                    _this.lock.getUserInfo(authResult.accessToken, function (error, profile) {
+                        if (error) {
+                            // Handle
+                            alert(error);
+                            return;
+                        }
+                        // localStorage.setItem("profile", JSON.stringify(profile));
+                        resolve(profile['nickname']);
+                        // Update DOM
+                    });
+                }
+            });
+        });
     };
     // Call this method in app.component.ts
     // if using path-based routing

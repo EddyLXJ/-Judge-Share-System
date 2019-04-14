@@ -21,8 +21,27 @@ export class AuthService {
 
   constructor(public router: Router) {}
 
-  public login(){
+  public login(): Promise<string>{
       this.lock.show();
+      return new Promise((resolve, reject) => {
+        this.lock.on('authenticated', (authResult) => {
+          if (authResult && authResult.accessToken && authResult.idToken) {
+            this.lock.getUserInfo(authResult.accessToken, function(error, profile) {
+              if (error) {
+                // Handle
+                alert(error);
+                return;
+              }
+              // localStorage.setItem("profile", JSON.stringify(profile));
+              resolve(profile['nickname'])
+
+              // Update DOM
+            });
+
+          }
+        });
+
+      })
   }
 
   // Call this method in app.component.ts
