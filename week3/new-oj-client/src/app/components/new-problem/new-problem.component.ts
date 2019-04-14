@@ -1,5 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {Problem} from '../../models/problem.model';
+import {AuthGuardService} from '../../services/auth-guard.service';
+import {AuthService} from '../../services/auth.service';
 
 
 
@@ -20,7 +22,7 @@ export class NewProblemComponent implements OnInit {
   public difficulties = ['Easy', 'Medium', 'Hard', 'Super'];
   newProblem: Problem = Object.assign({}, DEFAULT_PROBLEM);
 
-  constructor(@Inject('data') private data) {
+  constructor(@Inject('data') private data, private authGuard: AuthService) {
   }
 
   ngOnInit() {

@@ -13,6 +13,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {AuthService} from './services/auth.service';
 import { CallbackComponent } from './components/callback/callback.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import {AuthGuardService} from './services/auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,11 @@ import { ProfileComponent } from './components/profile/profile.component';
     {
     provide: 'auth',
     useClass: AuthService
-  }, AuthService],
+  }, AuthService,
+    {
+    provide: 'authGuard',
+      useClass: AuthGuardService
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
