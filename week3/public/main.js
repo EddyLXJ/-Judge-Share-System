@@ -427,6 +427,17 @@ var NewProblemComponent = /** @class */ (function () {
         this.newProblem = Object.assign({}, DEFAULT_PROBLEM);
     }
     NewProblemComponent.prototype.ngOnInit = function () {
+        var profile = JSON.parse(localStorage.getItem('profile'));
+        if (profile) {
+            var matedata = profile['app_metadata'];
+            console.log(matedata);
+            if (matedata['Admin']) {
+                this.authGuard.admin = matedata['Admin'];
+            }
+            else {
+                this.authGuard.admin = "";
+            }
+        }
     };
     NewProblemComponent.prototype.addProblem = function () {
         this.data.addProblem(this.newProblem).catch(function (error) { return console.log(error._body); });
@@ -881,7 +892,8 @@ var AuthService = /** @class */ (function () {
             .then(function (res) {
             localStorage.setItem('profile', JSON.stringify(res['0']));
             var profile = res['0'];
-            var matedata = profile['app_matedata'];
+            var matedata = profile['app_metadata'];
+            console.log(matedata);
             if (matedata['Admin']) {
                 _this.admin = matedata['Admin'];
             }

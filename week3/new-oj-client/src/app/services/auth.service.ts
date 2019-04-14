@@ -150,7 +150,8 @@ export class AuthService {
       .then((res:any) => {
         localStorage.setItem('profile', JSON.stringify(res['0']));
         let profile = res['0'];
-        let matedata = profile['app_matedata'];
+        let matedata = profile['app_metadata'];
+        console.log(matedata);
         if (matedata['Admin']) {
           this.admin = matedata['Admin'];
         } else {

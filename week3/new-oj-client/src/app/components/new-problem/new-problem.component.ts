@@ -26,6 +26,16 @@ export class NewProblemComponent implements OnInit {
   }
 
   ngOnInit() {
+    let profile = JSON.parse(localStorage.getItem('profile'));
+    if(profile) {
+      let matedata = profile['app_metadata'];
+      console.log(matedata);
+      if (matedata['Admin']) {
+        this.authGuard.admin = matedata['Admin'];
+      } else {
+        this.authGuard.admin = "";
+      }
+    }
   }
   addProblem(): void {
     this.data.addProblem(this.newProblem).catch(error => console.log(error._body));
