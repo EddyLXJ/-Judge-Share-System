@@ -12,6 +12,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import {HttpClientModule} from '@angular/common/http';
 import {AuthService} from './services/auth.service';
 import { CallbackComponent } from './components/callback/callback.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CallbackComponent } from './components/callback/callback.component';
     ProblemDetailComponent,
     NewProblemComponent,
     NavbarComponent,
-    CallbackComponent
+    CallbackComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

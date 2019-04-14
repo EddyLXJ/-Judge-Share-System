@@ -3,10 +3,12 @@ import { AUTH_CONFIG } from './auth0-variables';
 import { Router, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import Auth0Lock from 'auth0-lock';
-
+import {HttpResponse, HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Injectable()
 export class AuthService {
+
+
 
   lock = new Auth0Lock(AUTH_CONFIG.clientID, AUTH_CONFIG.domain, {
     autoclose: true,
@@ -18,30 +20,12 @@ export class AuthService {
       }
     }
   });
+  username: string = "";
 
-  constructor(public router: Router) {}
+  constructor(public router: Router, private http: HttpClient) {}
 
-  public login(): Promise<string>{
-      this.lock.show();
-      return new Promise((resolve, reject) => {
-        this.lock.on('authenticated', (authResult) => {
-          if (authResult && authResult.accessToken && authResult.idToken) {
-            this.lock.getUserInfo(authResult.accessToken, function(error, profile) {
-              if (error) {
-                // Handle
-                alert(error);
-                return;
-              }
-              // localStorage.setItem("profile", JSON.stringify(profile));
-              resolve(profile['nickname'])
-
-              // Update DOM
-            });
-
-          }
-        });
-
-      })
+  public login(){
+    this.lock.show();
   }
 
   // Call this method in app.component.ts
@@ -49,16 +33,8 @@ export class AuthService {
   public handleAuthentication(): void {
     this.lock.on('authenticated', (authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        this.lock.getUserInfo(authResult.accessToken, function(error, profile) {
-          if (error) {
-            // Handle
-            alert(error);
-            return;
-          }
-          localStorage.setItem("profile", JSON.stringify(profile));
+        // this.username = this.getProfile()['nickname'];
 
-          // Update DOM
-        });
         this.setSession(authResult);
         this.router.navigate(['/']);
       }
@@ -101,6 +77,23 @@ export class AuthService {
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
+    new Promise((resolve, reject) => {
+      this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
+        if (error) {
+          // Handle
+          alert(error);
+          return;
+        }
+        localStorage.setItem("profile", JSON.stringify(profile));
+        resolve(profile['nickname']);
+        // Update DOM
+      });
+    }).then(username => {
+
+      this.username =  username as string;
+
+    });
+
     // localStorage.setItem('profile',authResult.profile);
   }
 
@@ -123,6 +116,28 @@ export class AuthService {
 
   public getProfile(): any {
     return JSON.parse(localStorage.getItem('profile'));
+  }
+
+  public resetPassword(): void{
+    let profile = this.getProfile();
+    let url: string = "https://"+ AUTH_CONFIG.domain + "/dbconnections/change_password";
+    const headers = { headers : new HttpHeaders({'content-type': 'application/json'})};
+    let body =  { client_id: AUTH_CONFIG.clientID,
+        email: profile['name'],
+        connection: 'Username-Password-Authentication'
+      };
+
+    this.http.post(url,body, headers)
+      .toPromise()
+      .then((res: any) => {
+        console.log(res);
+      })
+      .catch(this.handleError);
+  }
+
+  private handleError(error: any): Promise<any>{
+    console.error("Error", error);
+    return Promise.reject(error.message || error);
   }
 
 }
