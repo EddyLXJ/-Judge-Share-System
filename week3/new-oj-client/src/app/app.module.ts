@@ -5,15 +5,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProblemListComponent } from './components/problem-list/problem-list.component';
 import { ProblemDetailComponent } from './components/problem-detail/problem-detail.component';
-import {DataService} from './services/data.service';
+import { DataService } from './services/data.service';
 import { NewProblemComponent } from './components/new-problem/new-problem.component';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import {HttpClientModule} from '@angular/common/http';
-import {AuthService} from './services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from './services/auth.service';
 import { CallbackComponent } from './components/callback/callback.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import {AuthGuardService} from './services/auth-guard.service';
+import { EditorComponent } from './components/editor/editor.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {AuthGuardService} from './services/auth-guard.service';
     NewProblemComponent,
     NavbarComponent,
     CallbackComponent,
-    ProfileComponent
+    ProfileComponent,
+    EditorComponent
   ],
   imports: [
     BrowserModule,
