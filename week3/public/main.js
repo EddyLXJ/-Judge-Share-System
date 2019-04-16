@@ -388,6 +388,11 @@ var EditorComponent = /** @class */ (function () {
                 _this.collaboration.change(JSON.stringify(e));
             }
         });
+        this.editor.session.getSelection().on('changeCursor', function () {
+            var cursor = _this.editor.session.getSelection().getCursor();
+            console.log('cursor N=move: ' + JSON.stringify(cursor));
+            _this.collaboration.cursorMove(JSON.stringify(cursor));
+        });
     };
     EditorComponent.prototype.setLanguage = function (language) {
         this.language = language;
@@ -1062,13 +1067,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/lib/index.js");
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _assets_colors__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../assets/colors */ "./src/assets/colors.ts");
+
 
 
 
 var CollaborationService = /** @class */ (function () {
     function CollaborationService() {
+        this.clientsInfo = {};
+        this.clientNum = 0;
     }
     CollaborationService.prototype.init = function (sessionId, editor) {
+        var _this = this;
         this.collaborationSocket = socket_io_client__WEBPACK_IMPORTED_MODULE_2__(window.location.origin, { query: 'sessionId=' + sessionId });
         this.collaborationSocket.on('change', function (delta) {
             console.log('collaboration : editor change by' + delta);
@@ -1076,12 +1086,41 @@ var CollaborationService = /** @class */ (function () {
             editor.lastAppliedChange = delta;
             editor.session.getDocument().applyDeltas([delta]);
         });
+        this.collaborationSocket.on('cursorMove', function (cursor) {
+            console.log("cursor move: " + cursor);
+            var session = editor.session;
+            cursor = JSON.parse(cursor);
+            var x = cursor['row'];
+            var y = cursor['column'];
+            var changeClientId = cursor['socketId'];
+            console.log(x + " " + y + ' ' + changeClientId);
+            if (changeClientId in _this.clientsInfo) {
+                session.removeMarker(_this.clientsInfo[changeClientId]['marker']);
+            }
+            else {
+                _this.clientsInfo[changeClientId] = {};
+                var css = document.createElement("style");
+                css.type = "text/css";
+                css.innerHTML = ".editor_cursor_" + changeClientId +
+                    '{ position: absolute; background: ' + _assets_colors__WEBPACK_IMPORTED_MODULE_3__["COLORS"][_this.clientNum] + ";" +
+                    ' z-index: 100; width:3px !important; }';
+                document.body.appendChild(css);
+                _this.clientNum++;
+            }
+            var Range = ace.require('ace/range').Range;
+            var newMarker = session.addMarker(new Range(x, y, x, y + 1), 'editor_cursor_' + changeClientId, true);
+            _this.clientsInfo[changeClientId]['marker'] = newMarker;
+        });
+        // test
         this.collaborationSocket.on("message", function (message) {
             console.log("received: " + message);
         });
     };
     CollaborationService.prototype.change = function (delte) {
         this.collaborationSocket.emit("change", delte);
+    };
+    CollaborationService.prototype.cursorMove = function (cursor) {
+        this.collaborationSocket.emit('cursorMove', cursor);
     };
     CollaborationService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -1160,6 +1199,30 @@ var DataService = /** @class */ (function () {
     return DataService;
 }());
 
+
+
+/***/ }),
+
+/***/ "./src/assets/colors.ts":
+/*!******************************!*\
+  !*** ./src/assets/colors.ts ***!
+  \******************************/
+/*! exports provided: COLORS */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "COLORS", function() { return COLORS; });
+var COLORS = [
+    '#0000ff',
+    "#a52a2a",
+    "#00ffff",
+    "#00008b",
+    "#008b8b",
+    "#a9a9a9",
+    "#006400",
+    "#bdb76b"
+];
 
 
 /***/ }),
