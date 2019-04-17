@@ -73,6 +73,8 @@ def example():
       console.log('cursor N=move: ' + JSON.stringify(cursor));
       this.collaboration.cursorMove(JSON.stringify(cursor));
     });
+
+    this.collaboration.restoreBuffer();
   }
 
   setLanguage(language: string): void{
