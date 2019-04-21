@@ -6,7 +6,7 @@ npm install
 nodemon server.js &
 cd ../executor
 pip install -r requirement.txt
-python executor_server.py &
+python executor_server.py 5000 &
 cd ../new-oj-client
 npm install
 ng build --watch

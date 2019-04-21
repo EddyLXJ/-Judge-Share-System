@@ -1,6 +1,7 @@
 from flask import Flask, request
 import executor_util as eu
 import json
+import sys
 
 app = Flask(__name__)
 
@@ -10,9 +11,7 @@ def hello():
 
 @app.route('/build_and_run', methods=["POST"])
 def build_and_run():
-    print "!11111111111111111111"
     print request.data
-    print "Get called %s %s" % (request.data, type(request.data))
     data = json.loads(request.data)
     print data
     if 'code' not in data or 'lang' not in data:
@@ -29,4 +28,5 @@ def build_and_run():
 
 if __name__ == "__main__":
     eu.load_image()
-    app.run(debug=True)
+    port = int(sys.argv[1])
+    app.run(port=port)
